@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Sign In</title>
+{% endblock %}
+
+{% block style %}
+<style type="text/css">
+  body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+  }
+
+  .form-signin {
+    max-width: 300px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+       -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  }
+  .form-signin .form-signin-heading,
+  .form-signin .checkbox {
+    margin-bottom: 10px;
+  }
+  .form-signin input[type="text"],
+  .form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+  }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <p class="error"><strong> {{error}}</strong></p>
+  <form class="form-signin" action="{{url_for('authentication.signin')}}" id="user_login" method="POST" role="form">
+    {{ login_form.hidden_tag()}}
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <!-- <input type="text" name="email" class="input-block-level" placeholder="email">
+    <input type="password" name="password" class="input-block-level" placeholder="Password">
+    <label class="checkbox">
+      <input type="checkbox" value="remember_me" name="remember_me"> Remember me
+    </label> -->
+    <div class="form-group {% if login_form.email.errors %} has-error {% endif %}">
+      <!-- login_form=name sassigned to forms in views.py -->
+      {{login_form.email.label}}
+      {{login_form.email(placeholder="email@example.com", class="form-control")}} 
+      <p class="help-block">{{ login_form.email.errors[0] }}</p>
+    </div>
+    <div class="form-group {% if login_form.password.errors %} has-error {% endif %}">
+      {{login_form.password.label}}
+      {{ login_form.password(placeholder="Min. 6 Characters", class="form-control") }}
+    </div>
+    <div class="checkbox">
+      {{ login_form.remember_me }} 
+      {{ login_form.remember_me.label }}
+    </div>
+    <button  class="btn btn-large btn-primary" type="submit">Sign in</button>
+  </form>
+
+</div>
+    <div class="col-md-3">
+    <br><br><br><br><br><br><br><br><br><br><br><br>
+    <p><h5>Don't have an account yet? Sign Up with us, it's completely free! </h5>
+    <div class="control-group">
+		<div class="controls">
+		  <a href="{{ url_for('authentication.register') }}" class="btn btn-primary" role="button">Sign Up</a>
+		</div>
+	</div>
+    </div>
+  </div>
+{% endblock %}
+
+ 

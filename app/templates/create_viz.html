@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>VORTEX Visualization Server</title>
+
+<style type="text/css">
+.title {
+	text-align: center;
+	font-family: Gill Sans Extrabold, sans-serif;
+}
+
+.viz-options {
+	text-align: center;
+}
+
+.viz-type {
+	border: 2px groove;
+	margin-left: 1em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="title">VORTEX</h1>
+<h2 class="title">Visualizations for Metagenomics</h2>
+<br/>
+<div class="viz-options">
+<a href="{{url_for('cpack.get_input', proj_id= proj_id)}}"><img class="viz-type" height="100px" width="100px" src="{{url_for('static', filename='images/cviz.svg')}}" alt="Circle Packing"></a>
+<a href="{{url_for('bubble.get_bubble_input', proj_id= proj_id)}}"><img class="viz-type" height="100px" width="100px" src="{{url_for('static', filename='images/bubbles.svg')}}" alt="Bubble Chart"></a>
+<a href="{{url_for('radar.get_radar_input', proj_id= proj_id)}}"><img class="viz-type" height="100px" width="100px" src="{{url_for('static', filename='images/radar-chart.svg')}}" alt="Radar Chart"></a>
+</div>
+{% endblock %}

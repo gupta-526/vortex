@@ -1,0 +1,66 @@
+<!--
+The extend statement tells this file inherit the general html elements from the the base.html file
+-->  
+{% extends "base.html" %}  
+{% block content %}  
+	<title> Radar Chart </title>
+	<head>
+	</head>
+	<style>
+	.times{
+		font-family: "Times New Roman", Times, serif;
+	}
+	.georgia{
+		font-family: Georgia, serif;
+	}
+	.arial{
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	.tahoma{
+		font-family:Tahoma,Geneva,sans-serif;
+	}
+	</style>
+   <form action="{{ url_for('radar.radar_viz')}}" id="userInput" method="POST" enctype="multipart/form-data" role="form">
+	<p>
+	<label>Title:</label><br>
+	<input type="text"	name="title" required > 
+	</p>
+	<p> 
+	<lable>Please select a font:</label>
+	<select name="fontList">
+	<option class="times" value="Times,serif"> 
+	Times New Roman
+	</option>
+	<option class="georgia" value="Georgia,serif"> 
+	Georgia
+	</option>
+	<option class="arial" value="Arial, Helvetica,sans-serif"> 
+	Arial, Helvetica
+	</option>
+	<option class="tahoma" value="Tahoma, Geneva, sans-serif"> 
+	Tahoma
+	</option>
+	</select>
+	</p>
+	
+	<!--	Buttons of the input -->
+
+	<input type="submit" value="Submit">
+	<input type="reset" value="Reset">
+
+	</form> 
+ 		<div class="text-center">
+		<h4> Select tab seperated text file </h4>
+		<select name="myFile" form="userInput">
+			{% if files is not none %}
+				{% for file in files %}
+					<option value="{{ file.File.uploaded_file }}">
+						{{ file.File.uploaded_file }}</option>
+				{% endfor %}
+			{% else %}
+				<p> Please upload a file and then try again </p>
+			{% endif %}
+		</select>
+	</div>	
+
+{% endblock %}

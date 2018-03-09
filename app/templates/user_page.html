@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <body>
+
+    <div id="wrapper">
+
+        <!-- Page Content -->
+    <div id="page-wrapper">
+    <div class="container-fluid row col-lg-12">
+        <h1 class="page-header">Dashboard</h1>
+        <br>
+        <h2 class="sub-header">Your Projects</h2><br>
+         {% for project in all_proj %}
+            <div id="proj" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-tittle">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#{{ project.Project.id }}" >{{ project.Project.project_name }}
+                        </h4>
+                    </div>
+                    <div id="{{ project.Project.id }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            {{ project.Project.description }}
+                            <br>
+                            {% if all_files[project.Project.id] %}
+                                {% for file in all_files[project.Project.id] %}
+                                    {% block user_file scoped %}
+                                    <i class="fa fa-file-text-o" aria-hidden="true">{{ file.File.uploaded_file}}</i>
+                                    {% endblock user_file %}
+                                {% endfor %}
+                            {% else %}
+                                No files created/uploaded yet!
+                            {% endif %}
+                        </div>
+                        <div class="panel-footer">
+                            <a href="javascript:delete_proj('{{ project.Project.id }}')">
+                            <button type="button" class="btn btn-primary btn-md" id="delete_proj">Delete Project</button></a>
+                            <a href="javascript:uploadFile({{ project.Project.id }})">
+                            <button type="button" class="btn btn-primary btn-md"  data-toggle="modal" data-target="#fileupload_form" id="upload_file">Add File</button></a>
+                            <!-- add file modal -->
+                            <div class="modal fade" id="fileupload_form" tabindex="-1" role="dialog">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="upload_fileLabel">Upload File</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form id="upload-file" method="post" enctype="multipart/form-data">
+                                          <input type="hidden" id="file_proj_id" name="file"/>
+                                        <span class="btn btn-success fileinput-button">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span>Add file</span>
+                                            <input name="file" type="file">
+                                        </span>
+                                        <button id="upload-file-btn" type="button" class="btn btn-primary">Upload</button>
+                                    </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div><!-- add file modal -->
+                            <a href="{{ url_for('portfolio.create_viz', proj_id=project.Project.id) }}">
+                                <button id="" class="btn btn-primary btn-md">Create Visualization</button></a>
+
+                        </div> <!-- pnael footer --> 
+                    </div>
+                </div>
+            </div>
+         {% endfor %} <!--Loop for showing each project -->
+                <!-- Insert button for add new project -->
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#add_project" id="add_proj_add">Add New Project</button>
+        <div class="modal fade modal-lg" id="add_project" role="dialog">
+            <form class="form-addproj" action="{{url_for('portfolio.add_project')}}" id="add_project_form" method="POST" role="form">
+                <div class="modal-dialog form-group" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            {{ add_proj.hidden_tag() }}
+                            <h3>New Project </h3>
+                        </div>
+                        <div class="form-group">
+                            {{ add_proj.name.label }}
+                            {{ add_proj.name(class="form-control") }}
+                            <p class="help-block">{{ add_proj.name.errors[0] }}</p>
+                        </div>
+                        <div class="form-group">
+                            {{ add_proj.description.label }}
+                            {{ add_proj.description(class="form-control") }}
+                            <p class="help-block">{{ add_proj.description.errors[0] }}</p>
+                        </div>   
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-success"  id="add_proj_save">Save</button>
+                        <button type="button" class="btn btn-primary btn-default"  data-dismiss="modal">Cancel</button>
+                    </div> 
+                </div>
+            </form>
+        </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+
+
+{% endblock %}
+{% block script %}
+<script>
+ //block to implement javascript/jQuery functionality for dynamic  form data validation
+ //and not having to load a new page to add a new project or delte or something like that.
+
+    $(document).ready(function(){
+
+    });
+    //<!-- function create_viz(proj_id){
+    //     $.get("/create_viz/"+proj_id,{})
+    //     window.location.assign() 
+    // }-->
+    function delete_proj(proj_id){
+        // var project_id = $("#delete_proj").attr("value")
+        bootbox.confirm("You cannot undo this action. \n Are you sure?", function(result){
+            console.log(result)
+            if(result){
+                $.getJSON("/delete_project/"+ proj_id, 
+                    {}).done(function(data){
+                        location.reload();
+                    }).fail(function(data, textStatus, xhr){
+                        alert("fail = "+ data+ ", textStatus" + textStatus +", result: "+result);
+                    });
+           
+            }else{
+                alert("fail-you fucked up. Try again")
+            }
+         });           
+        
+    }
+
+    $("#add_proj_add").click(function(){
+        $("#portfolio_id").val("");
+        $("#name").val("");
+        $("description").val("");
+        $("#add_project").modal('show');
+        return false;
+    });
+
+    $("#add_proj_save").click(function(){
+        $.post(
+            "{{ url_for('portfolio.add_project') }}",
+            $("#add_project_form").serialize(),
+            function(data, textStatus){
+                console.log(data)
+                var errors = $.parseJSON(data);
+
+                $("#error_title").text("");
+                $("#error_description").text("");
+
+                if(errors.iserror){
+                    console.log('set');
+                    if(errors.title !=undefined) $("#error_title").text(errors.title[0]);
+                    if(errors.description != undefined) $("#error_description").text(error.description[0]);
+
+                }else if(errors.savedsuccess)
+                {
+                    $("#add_project").modal('hide');
+                    window.location.href = window.location.href
+                    // window.location.reload(true);
+                }
+            }
+        );
+    });
+
+    function uploadFile(proj_id){
+        $('#file_proj_id').val(proj_id);
+        $('#fileupload_form').modal();
+    }
+
+    $(function(){
+        $('#upload-file-btn').click(function(){
+           var form_data = new FormData($('#upload-file')[0]);
+        // form_data.append("userfile_id", $("userfile_id").val());
+            $.ajax({
+                type: 'POST',
+                url: "/add_file/"+ $('#file_proj_id').val(),
+                data: form_data,
+                dataType: "text",
+                contentType: false,
+                cache: false,
+                processData: false,
+                async: false,
+                success: function (data) {              
+                    $('#fileupload_form').modal('hide');
+                    $("#file").attr("src", data);
+                },
+            }); 
+        });
+    });
+    // {
+    //     $("fileupload_form").modal()
+        
+    // }
+</script>
+{% endblock %}

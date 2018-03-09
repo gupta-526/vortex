@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content" 'VORTEX' is a webapplication for daa visualization for omics related technology, designed and maintained by Kumar Lab at the Ohio State University">
+  <meta name="author" content="Niharika Gupta And Shareef Dabdoub">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="./app/static/css/sb-admin-2.css"> -->
+  <!--<script src="./app/static/js/sb-admin-2.js"></script> -->
+  
+  {% block head %} 
+  {%  endblock %}
+</head>
+<style>
+  @media (min-width: 980px) {
+    body {
+    padding-top: 60px;
+    padding-bottom: 42px;
+    padding-left: 50px;
+    padding-right: 50px;
+    }
+  }
+  {% block style %}
+  {% endblock %}
+</style>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="{{ url_for('views.index') }}">Home</a></li>
+        <li><a href="{{ url_for('views.index') }}">Create Your Own</a></li>
+
+        {% if not current_user.is_authenticated %}
+          <li><a href ="{{ url_for('authentication.signin') }}">Sign In </a></li>
+          <li><a href ="{{ url_for('authentication.register') }}">Register </a></li>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+          <li><a href="{{ url_for('portfolio.user_home') }}"> Dashboard </a></li>
+          <li style="float:right"><a href="{{ url_for('authentication.logout') }}"> Logout </a></li>
+        {% endif %}
+   
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="span9">
+  <div class="page-header">
+    <h2 class="text-center">VORTEX: BioInformatics Data Visualization Tool-Box</h2> 
+  </div>
+</div>
+{% block content %}
+{% endblock %}
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/bootbox.min.js"></script>
+<script src="https://use.fontawesome.com/bbf742acaa.js"></script>
+{% block script %}
+{% endblock %}
+</html>

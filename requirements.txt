@@ -1,0 +1,5 @@
+Flask>=0.10.1
+MarkupSafe 
+flask-login>=0.2.7
+sqlalchemy>=0.8.2
+Flask-SQLAlchemy>=0.16

@@ -1,0 +1,14 @@
+{ % block content % }
+<div class="container">
+	<form class="form-new-proj" action="{{url_for('portfolio.PortfolioView:add_project')}}" id="new_proj" method="POST" role="form">
+		<div class="form-group">
+			{{create_proj.name.label}}
+		</div>
+		<div class="form-group">
+			{{create_proj.description.label}}
+		</div>
+
+		<button class="btn btn-primary" type="submit">Create New Project!</button>
+
+
+{ % endblock % }

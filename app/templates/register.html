@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Sign Up</title>
+{% endblock %}
+{% block content %}
+<div class="container">
+
+	<div class="row">
+	    <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+			<form role="form" id="user_register" method="POST" role="form" action="{{url_for('authentication.register')}}">
+				{{ form.hidden_tag() }}
+				<h2>Sign Up <small>It's free!</small></h2>
+				<div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                    {{form.name.label}}
+                    {{form.name(placeholder="E.g: Jon Doe", class="form-control")}} 
+                    <p class="help-block">{{ form.name.errors }}</p>
+                </div>
+
+				<div class="form-group {% if form.email.errors %} has-error {% endif %}">
+                    {{ form.email.label }}
+                    {{ form.email(placeholder="E.g. email@example.com", class="form-control") }} 
+                    <p class="help-block">{{ form.email.error }}</p>
+                </div>
+                <div class="form-group {% if form.password.errors %} has-error {% endif %}">
+                    {{form.password.label}}
+                    {{ form.password(placeholder="Min. 6 Characters", class="form-control") }}
+                    <p class="help-block">{{ form.password.errors }}</p>
+                </div>
+                <div class="form-group {% if form.password.errors %} has-error {% endif %}">
+                    {{form.check_password.label}}
+                    {{ form.check_password(placeholder="Min. 6 Characters", class="form-control") }}
+                    <p class="help-block">{{ form.check_password.errors }}</p>
+                </div>
+                
+
+				<br>
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 col-md-6">
+				 		<button  class="btn btn-large btn-primary" type="submit">Register</button>
+				 	</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<br><br><br><br><br><br><br><br><br><br><br><br>
+		<p><h5>Already have an account?</h5>
+		<div class="control-group">
+			<div class="controls">
+				<div class="col-xs-12 col-md-6"><a href="{{ url_for('authentication.signin') }}" class="btn btn-success btn-block btn-md">Sign In</a></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
